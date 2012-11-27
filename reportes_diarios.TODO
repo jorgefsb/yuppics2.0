@@ -1,0 +1,12 @@
+26-11-2012:
+
+27-11-2012:
+  ☐ integracion de aviary con codeigniter, realizacion de ejemplos y pruebas del funcionamiento de la libreria.
+  ☐ pruebas con filepicker.io, se analizo los pros y contras del servicio para ver si es viable implementarlo dentro del proyecto yuppics2.0. Como conclusion para el proyecto no es la mejor opcion debido a que se requiere que proporcione la URL directa de una imagen ejemplo (http://www.ejemplo.com/imagen.jpg) y proporciona un enlace el cual si se accede a el descarga la imagen y en este caso para poderla mostrar en el explorador se requiere utilizar una funcion proporcionada por filepicker.io y desde mi punto de vista se realizaria doble proceso. Otro punto es que no hay organizacion de los archivos en filepicker.io es decir si se guardan en el servidor de youppics se podria organizar como ejemplo de la siguiente manera:
+  - servidor
+     - cliente_id
+        - photobook_id 
+
+  Aviary trae soporte por si solo para las distintas plataformas, por lo que se podria integrar sin problemas.
+
+  ☐ Integracion de la libreria para la autenficacion con facebook, falto relizar el testeo.
