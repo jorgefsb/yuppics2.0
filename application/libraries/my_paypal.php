@@ -119,6 +119,9 @@ class my_paypal{
 
 	}
 
+	/**
+		* Asigna la configuracion general para realizar la venta
+		*/
 	public function config_sale($conf_sale=array()){
 		if (count($conf_sale) > 0) {
 			foreach ($conf_sale as $key => $value) {
@@ -127,6 +130,9 @@ class my_paypal{
 		}
 	}
 
+	/**
+		* Asignar la configuracion de una orden de pago
+		*/
 	public function config_payment($conf_payment=array()){
 		if (count($conf_payment) > 0) {
 			foreach ($conf_payment as $key => $value) {
@@ -135,7 +141,9 @@ class my_paypal{
 		}
 	}
 
-
+	/**
+		* Agrega productos a la orden de compra
+		*/
 	public function add_products($product){
 		$total = 0;
 		$PaymentOrderItems = array();
@@ -172,6 +180,9 @@ class my_paypal{
 	}
 
 
+	/**
+		* Envia la peticion a paypal para procesar la orden
+		*/
 	public function send_checkout(){
 		$Payments = array($this->Payment);
 		$PayPalRequest = array(

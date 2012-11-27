@@ -52,6 +52,10 @@ class My_upload facebook{
   	}
   }
 
+  /**
+   * Realiza la autenticacion del usuario en facebook
+   * @return 
+   */
   public function auth(){
   	session_start();
 
@@ -83,7 +87,10 @@ class My_upload facebook{
 
   		$graph_url = "https://graph.facebook.com/me?access_token=" . $params['access_token'];
   		$user = json_decode(file_get_contents($graph_url));
+  		
   		echo "Hola " . $user->name;
+
+  		return $user;
   	}
   	else
   	{
