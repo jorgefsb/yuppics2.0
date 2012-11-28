@@ -14,6 +14,8 @@ Requisitos:
   jQuery v1.8.3 y/o Angularjs v1.0.2
   Aviary
 
+  basecam y mixpanel
+
  Restricciones:
    Compatibilidad de Aviary en los navegadores (IE)
    Compatibilidad en los dialogos de Facebook para IE6/7
@@ -41,4 +43,12 @@ SERVICIOS APIs:
         Consumer key        GKuPKWHIFT23p4KVj0PA
         Consumer secret     nuZ9TzCZ6pkBWQv2vqjon29849YfpqRgCLhU9LKKFM
  ☐ Libreria PayPal integrada a codeigniter
- ☐ 
+ ☐ Mercadopago
+   - API test:
+       Client_id:      7172967533334556
+       Client_secret:  omCwGHkRTK9PL1b2pskoCUaBIDtnhgy1
+       - Cliente
+         id: 129618607
+         nickname: TEST6876
+         password: qatest2157
+         site_status: active
