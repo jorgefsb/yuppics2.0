@@ -63,10 +63,16 @@
 		-webkit-box-shadow: 0 0 8px #D0D0D0;
 	}
 	</style>
+
+	<!-- start Mixpanel --><script type="text/javascript">(function(c,a){window.mixpanel=a;var b,d,h,e;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===c.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.1.min.js';d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d);a._i=[];a.init=function(b,c,f){function d(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]);a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var g=a;"undefined"!==typeof f?
+g=a[f]=[]:f="mixpanel";g.people=g.people||[];h="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config people.identify people.set people.increment".split(" ");for(e=0;e<h.length;e++)d(g,h[e]);a._i.push([b,c,f])};a.__SV=1.1})(document,window.mixpanel||[]);
+mixpanel.init("578b411e5f94f05178898e377bae5c8a");</script><!-- end Mixpanel -->
+
+<script type="text/javascript">mixpanel.track("Video play");</script>
 </head>
 <body>
 
-<div id="container">
+<!-- <div id="container">
 	<h1>Welcome to CodeIgniter!</h1>
 
 	<div id="body">
@@ -82,7 +88,7 @@
 	</div>
 
 	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds</p>
-</div>
+</div> -->
 
 </body>
 </html>

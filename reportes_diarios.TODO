@@ -15,3 +15,9 @@
 
   ☐ Integracion y correccion de la libreria mercadopago ya que no funcionaba en su totalidad, pruebas para obtener acceso a la API, crear usuarios, ejemplos para procesar la compra. (5hrs aprox)
   ☐ Integracion de la libreria MailChimp (utilizada principalmente para el servicio de Newsletters) en el framework, se realizaron tests para probar los servicios para la creacion de campañas, listas y agregar usuarios a dichas listas. Se realizaron tests para comprobar que los usuarios si se suscribieran al Newsletter y les llegara la informacion de registro. (3hrs aprox)
+
+29-11-2012:
+  ☐ Termine de integrar la libreria de paypal y se realizaron pruebas para comprobar el buen funcionamiento utilizando la plataforma de pruebas de paypal (sandbox)
+  ☐ Realize mas pruebas con la API de mailchimp (crear campaña, crear templates, replicar campañas, eliminar campañas, programar y enviar campañas)
+  ☐ En mixpanel hice una revizada general de la API y vi la forma de integarlo al sitio web (muy parecido a analitycs)
+  ☐ Busque herramienta para crear UMLs (creately)
