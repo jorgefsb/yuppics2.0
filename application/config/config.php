@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/yuppics2.0/';
+$config['base_url']	= 'http://127.0.0.1/yuppics2.0/';//localhost
 
 /*
 |--------------------------------------------------------------------------

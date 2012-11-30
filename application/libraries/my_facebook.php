@@ -11,24 +11,24 @@
 // ------------------------------------------------------------------------
 /**
  * @category	Facebook API
+ * http://developers.facebook.com/docs/reference/api/
  */
-class My_upload facebook{
+class  my_facebook{
 
 	private $CI; // Instancia de Codeigniter
 
 	// Vars
-  private $APP_ID = ''; // FACEBOOK APP ID
-	private $APP_SECRET = ''; // FACEBOOK APP SECRET
+  private $APP_ID = '512075685472594'; // FACEBOOK APP ID
+	private $APP_SECRET = 'c49714bb2f943ff53a2453099910bf25'; // FACEBOOK APP SECRET
+  private $graph_url = 'https://graph.facebook.com/';
   
   private $redirect_uri = '';	// URL A LA QUE FACEBOOK RE-DIRECCIONARA
-  private $scope = ''	// PERMISOS QUE LA APP PEDIRA AL USUARIO. MAS PERMISOS EN http://developers.facebook.com/docs/concepts/login/permissions-login-dialog/
-  
-  public $code;
-  public $state;
+  private $scope = '';	// PERMISOS QUE LA APP PEDIRA AL USUARIO. MAS PERMISOS EN http://developers.facebook.com/docs/concepts/login/permissions-login-dialog/
+  private $display = '';
 
   /**
    * Constructor
-   * @param  array $config=array('redirect_uri'=>'http://www.yuppics.com/', 'scode'=> '')
+   * @param  array $config=array('redirect_uri'=>'http://www.yuppics.com/', 'scope'=> '')
    */
   public function __construct($config=array())
   {
@@ -43,7 +43,7 @@ class My_upload facebook{
 
   /**
    * Inicializa la configuracion de facebook
-   * @param  array $config=array('redirect_uri'=>'http://www.yuppics.com/', 'scode'=> '')
+   * @param  array $config=array('redirect_uri'=>'http://www.yuppics.com/', 'scope'=> '')
    */
   public function initialize($config=array())
   {
@@ -54,26 +54,41 @@ class My_upload facebook{
 
   /**
    * Realiza la autenticacion del usuario en facebook
-   * @return 
+   *
+   * http://developers.facebook.com/docs/howtos/login/server-side-login/
+   * http://developers.facebook.com/docs/reference/dialogs/oauth/
+   * @return string Access Token
    */
-  public function auth(){
-  	session_start();
+  public function oauth(){
+    session_start();
+  	
+    $code = isset($_GET['code'])?$_GET['code']:'';
+    $state = isset($_GET['state'])?$_GET['state']:'';
 
-  	$code = $_REQUEST['code'];
   	if (empty($code)) 
   	{
   		$_SESSION['state'] = md5(uniqid(rand(), TRUE)); // PROTECCION CSRF
   		$dialog_url = "https://www.facebook.com/dialog/oauth?client_id=" . $this->APP_ID . 
-  									"&redirect_url=" . urlencode($this->redirect_uri) . 
+  									"&redirect_uri=" . urlencode($this->redirect_uri) . 
   									"&state=" . $_SESSION['state'] . 
-  									(empty($this->scope))?'':"&scope=" . $this->scope;
+  									(empty($this->scope)?'':"&scope=" . $this->scope) .
+                    (empty($this->display)?'':"&display=" . $this->display);
 
-  		echo("<script>top.location.href='".$dialog_url."'</script>");
+      // echo $dialog_url;exit;
+      if ($this->display === 'popup') 
+      { 
+        echo("<script>fb=window.open('".$dialog_url."', 'Login con facebook', 'width=50, height=50, left=600, top=150')</script>");
+        exit;
+      }
+      else
+      {
+        echo("<script>top.location.href='" . $dialog_url . "'</script>");
+      }
   	}
 
-  	if ($_SESSION['state'] && ($_SESSION['state']===$_REQUEST['state'])) 
+  	if ($_SESSION['state'] && ($_SESSION['state'] === $state)) 
   	{
-  		$token_url = "https://graph.facebook.com/oauth/access_token?" . 
+  		$token_url = $this->graph_url . "oauth/access_token?" . 
   									"client_id=" . $this->APP_ID .
   									"&redirect_uri=" . urlencode($this->redirect_uri) .
   									"&client_secret=" . $this->APP_SECRET . 
@@ -84,13 +99,7 @@ class My_upload facebook{
   		parse_str($response, $params);
 
   		// $_SESSION['access_token'] = $params['access_token']; // ALMACENAR EN LA BDD O CREAR SESION CON EL ACCESSO_TOKEN
-
-  		$graph_url = "https://graph.facebook.com/me?access_token=" . $params['access_token'];
-  		$user = json_decode(file_get_contents($graph_url));
-  		
-  		echo "Hola " . $user->name;
-
-  		return $user;
+      return $params['access_token'];
   	}
   	else
   	{
@@ -99,16 +108,72 @@ class My_upload facebook{
   	
   }
 
+  /**
+   * Obtiene la informacion basica del usuario
+   * @param  string Access token
+   * @return object
+   */
+  public function get_user_about_me($access_token)
+  {
+    $graph_url = $this->graph_url . "me?access_token=" . $access_token;
+    return json_decode(file_get_contents($graph_url));
+  }
+
+  /**
+   * Obtiene todas las fotos del usuario sin importar los albums
+   * // http://developers.facebook.com/docs/reference/api/photo/
+   * @param  string Access token
+   * @return object
+   */
+  public function get_user_photos($access_token)
+  {
+    $graph_url = $this->graph_url . "me/photos?access_token=" . $access_token;
+    return json_decode(file_get_contents($graph_url));
+  }
+
+  /**
+   * Obtiene todos los albums del usuario sin fotos
+   * // http://developers.facebook.com/docs/reference/api/album/
+   * @param  string Access token
+   * @return object
+   */
+  public function get_user_albums($access_token)
+  {
+    $graph_url = $this->graph_url . "me/albums?access_token=" . $access_token;
+    return json_decode(file_get_contents($graph_url));
+  }
+
+  /**
+   * Obtiene todas las fotos de un album especifico
+   * // http://developers.facebook.com/docs/reference/api/album/
+   * @param  string Access token.
+   * @param  string Id del Album que se obtendran las fotos.
+   * @return object
+   */
+  public function get_user_album_photos($access_token, $ida)
+  {
+    $graph_url = $this->graph_url . $ida . "/photos?access_token=" . $access_token;
+    return json_decode(file_get_contents($graph_url));
+  }
+
+  /**
+   * Asigna manualmente el scope (permisos)
+   * @param  string Permisos que tendra la APP.
+   */
   public function set_scope($scope='')
   {
   	$this->scope = $scope;
   }
 
+  /**
+   * Asigna manualmente la url a la que redireccionara facebook
+   * @param  string Url que redireccionara.
+   */
   public function set_redirect_uri($redirect_uri='')
   {
   	$this->redirect_uri = $redirect_uri;
   }
 
 }
-/* End of file myupload.php */
-/* Location: ./application/libraries/myupload.php */
+/* End of file my_facebook.php */
+/* Location: ./application/libraries/my_facebook.php */
