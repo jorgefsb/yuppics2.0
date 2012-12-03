@@ -1,4 +1,5 @@
 26-11-2012:
+  ☐ Analisis de las APIs a utilizar dentro de yuppics2.0 y registro en algunas de ellas para obtener las APIS key. Revision de manera general los servicios a utilizar.
 
 27-11-2012:
   ☐ integracion de aviary con codeigniter, realizacion de ejemplos y pruebas del funcionamiento de la libreria.
@@ -21,3 +22,10 @@
   ☐ Realize mas pruebas con la API de mailchimp (crear campaña, crear templates, replicar campañas, eliminar campañas, programar y enviar campañas)
   ☐ En mixpanel hice una revizada general de la API y vi la forma de integarlo al sitio web (muy parecido a analitycs)
   ☐ Busque herramienta para crear UMLs (creately)
+
+30-11-2012:
+  ☐ Integracion y testeo de la API de twitter, pruebas de publicacion.
+  ☐ Integracion y testeo de la API de facebook, pruebas de autenticacion, obtener albums, obtener fotos, enviar invitaciones, hacer publicaciones.
+
+03-12-2012:
+  ☐ analisis de los requerimientos para la elaboracion de la primera revision de la base de datos.
