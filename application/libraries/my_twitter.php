@@ -22,6 +22,8 @@ class  my_twitter {
 	// Vars
   private $key = 'MPqCGUskTYllpU4iOM0VQ'; // TWITTER CONSUMER KEY
 	private $secret = '41nH00dTH8KoynjkXbQsR2EaZDpopx4AWNySoZDWpA'; // TWITTER CONSUMER SECRET
+  private $oauth_token = '171242286-5vBLYdJBl5Vc5nLQBXXHhXvNlwO8XKHikPv7lErZ';  // TWITTER ACCESS TOKEN
+  private $oauth_secret_token = 'qr2GTE0RgbmfqBerLzAhtzERte7wWc52l2JPvHFRM'; // TWITTER ACCESS TOKEN SECRET
  
   private $request_token = 'https://api.twitter.com/oauth/request_token';
   private $access_token = 'https://api.twitter.com/oauth/access_token';
@@ -85,24 +87,24 @@ class  my_twitter {
     // Si el usuario da permisos a la APP entonces se obtiene un access token legitimo
     if (isset($_GET['oauth_token']) && isset($_GET['oauth_verifier']))
     {
-      $params = array('oauth_nonce'            => time(),
-                      'oauth_signature_method' => 'HMAC-SHA1',
-                      'oauth_timestamp'        => time(),
-                      'oauth_consumer_key'     => $this->key,
-                      'oauth_token'            => $_GET['oauth_token'],
-                      'oauth_version'          => '1.0');
+      // $params = array('oauth_nonce'            => time(),
+      //                 'oauth_signature_method' => 'HMAC-SHA1',
+      //                 'oauth_timestamp'        => time(),
+      //                 'oauth_consumer_key'     => $this->key,
+      //                 'oauth_token'            => $_GET['oauth_token'],
+      //                 'oauth_version'          => '1.0');
 
-      $url = $this->buildUrl($params, FALSE);
-      $post_data = array('oauth_verifier' => $_GET['oauth_verifier']);
-      $result_request_token =  $this->_http($url, $post_data);
+      // $url = $this->buildUrl($params, FALSE);
+      // $post_data = array('oauth_verifier' => $_GET['oauth_verifier']);
+      // $result_request_token =  $this->_http($url, $post_data);
 
-      var_dump($result_request_token);
+      // var_dump($result_request_token);
 
       // var_dump($this->buildUrl($params, FALSE, TRUE));exit;
 
       // return $result_request_token;
 
-      parse_str($result_request_token);
+      // parse_str($result_request_token);
 
       // if ( isset($oauth_token) && isset($user_id) ) {
       //   // Obtiene Informacion extra del usuario
@@ -114,13 +116,20 @@ class  my_twitter {
                       'oauth_signature_method' => 'HMAC-SHA1',
                       'oauth_timestamp'        => time(),
                       'oauth_consumer_key'     => $this->key,
-                      'oauth_token'            => $oauth_token,
-                      'oauth_version'          => '1.0');
+                      // 'oauth_token'            => '171242286-5vBLYdJBl5Vc5nLQBXXHhXvNlwO8XKHikPv7lErZ',
+                      'oauth_token'            => $_GET['oauth_token'],
+                      // 'oauth_token_secret'     => 'qr2GTE0RgbmfqBerLzAhtzERte7wWc52l2JPvHFRM',
+                      'oauth_version'          => '1.0',
+                      'status'                => rawurlencode("waka waka"));
 
 
-      var_dump($params);
+      // var_dump($params);
+      // 
+      // echo $this->buildUrl($params, FALSE, TRUE);
 
-      $this->statuses_update('status='.urlencode('Prueba'), $this->buildUrl($params, FALSE, TRUE));
+      // $this->statuses_update('status=Maybe%20he%27ll%20finally%20find%20his%20keys.%20%23peterfalk', $this->buildUrl($params, FALSE, TRUE));
+      // echo  $this->buildUrl($params, FALSE, TRUE, "POST");exit;
+      $this->statuses_update("status=".rawurlencode("waka waka"), $this->buildUrl($params, FALSE, TRUE, "POST", 'https://api.twitter.com/1.1/statuses/update.json'));
 
     }
     elseif (isset($_GET['denied'])) // Si el usuario rechazo o cancelo la autorizacion de la app
@@ -140,20 +149,25 @@ class  my_twitter {
   }
 
 
-  private function buildUrl($params=array(), $request_token = TRUE, $header_authorization = FALSE)
+  private function buildUrl($params=array(), $request_token = TRUE, $header_authorization = FALSE, $method='GET', $url=NULL)
   {
     $keys   = $this->_urlencode_rfc3986(array_keys($params));
     $values = $this->_urlencode_rfc3986(array_values($params));
     $params = array_combine($keys, $values);
     uksort($params, 'strcmp');
 
-    $url_token = ($request_token)?$this->request_token:$this->access_token;
+    // $url_token = ($request_token)?$this->request_token:$this->access_token;
+    $url_token = ($url)?$url:(($request_token)?$this->request_token:$this->access_token);
 
     foreach ($params as $k => $v) {$pairs[] = $this->_urlencode_rfc3986($k).'='.$this->_urlencode_rfc3986($v);}
     $concatenatedParams = implode('&', $pairs);
 
     // form base string (first key)
-    $baseString= "GET&".$this->_urlencode_rfc3986($url_token)."&".$this->_urlencode_rfc3986($concatenatedParams);
+    $baseString= $method."&".$this->_urlencode_rfc3986($url_token)."&".$this->_urlencode_rfc3986($concatenatedParams);
+
+    if ( $method === 'POST') {
+      // echo $baseString;exit;
+    }
     // form secret (second key)
     $secret = $this->_urlencode_rfc3986($this->secret)."&";
 
@@ -185,7 +199,7 @@ class  my_twitter {
 
     if(isset($post_data))
     {
-      // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth oauth_consumer_key="MPqCGUskTYllpU4iOM0VQ", oauth_nonce="f83443c7c726188297cbb20f79b4a908", oauth_signature="vGcgfrX%2BCOaiC1I%2F5eK%2F2u0qpn0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354308187", oauth_token="171242286-5vBLYdJBl5Vc5nLQBXXHhXvNlwO8XKHikPv7lErZ", oauth_version="1.0"'));
+      // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth oauth_consumer_key="MPqCGUskTYllpU4iOM0VQ", oauth_nonce="67d205d5785c5b7ba1031bc551fabc79", oauth_signature="qCN666p03DjPLPgEPMjbdUhAXq8%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354649319", oauth_token="171242286-5vBLYdJBl5Vc5nLQBXXHhXvNlwO8XKHikPv7lErZ", oauth_version="1.0"'));
       curl_setopt($ch, CURLOPT_HTTPHEADER, array($headers));
       curl_setopt($ch, CURLOPT_POST, 1);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);

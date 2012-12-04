@@ -19,6 +19,10 @@ class twitter_test extends MY_Controller {
 	 */
 	public function index()
 	{
+		// echo rawurldecode("status=Maybe%20he%27ll%20finally%20find%20his%20keys.%20%23peterfalk")."<br>";
+		// echo "status=Maybe%20he%27ll%20finally%20find%20his%20keys.%20%23peterfalk"."<br>";
+		// echo "status=".rawurlencode("Maybe he'll finally find his keys. #peterfalk");
+		// exit;
 		$this->load->library('my_twitter');
 		$this->my_twitter->oauth();
 	}

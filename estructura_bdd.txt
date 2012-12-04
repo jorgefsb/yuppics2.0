@@ -65,6 +65,12 @@
 	- amount
 	- created
 
+*newsletter
+	- id_news
+	- name
+	- last_name
+	- email
+
 *themes
 	- id_theme
 	- name
@@ -102,6 +108,45 @@
 	- url_img
 	- url_thumb
 
+*yuppics_pages
+	- id_ypage
+	- id_yuppic
+	- id_page
+	- num_pag
+
+*yuppics_pages_photos
+	- id_ypage
+	- id_photo
+	- id_page_img
+	- id_frame
+
+*accomodation_page
+	- id_page
+	- num_imgs
+	- url_preview
+
+*accomodation_imgs
+	- id_img
+	- width
+	- height
+
+*accomodation_page_imgs
+	- id_page_img
+	- id_page
+	- id_img
+	- coord_x
+	- coord_y
+
+*frames
+	- id_frame
+	- name
+	- url_preview
+
+*frames_imgs
+	- id_frame
+	- id_img
+	- url_frame
+
 *products
 	- id_product
 	- name
@@ -124,11 +169,3 @@
 	- id_order
 	- id_yuppics
 
-*yuppics_frames
-	- id_frame
-	- id_position
-	- url_img
-	- size
-
-*yuppics_acomodo
-	- id_acomodo

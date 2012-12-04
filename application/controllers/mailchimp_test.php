@@ -33,13 +33,14 @@ class mailchimp_test extends CI_Controller {
 		}*/
 
 		$camps = $this->mcapi->campaigns(array('list_id' => $this->config->item('mcapi_list_id')) );
-
+		var_dump($camps);
 		foreach ($camps['data'] as $key => $value) {
-			if (strpos($value['title'], 'codigo') !== false) {
+			if (strpos($value['title'], 'Campañita') !== false) {
+				echo "ddd";
 				// var_dump($this->mcapi->campaignSchedule($value['id'], '2012-11-29 17:01:00'));
 				// var_dump($this->mcapi->campaignReplicate($value['id']));
 				// var_dump($this->mcapi->campaignSendNow($value['id']));
-				// var_dump($this->mcapi->campaignSendTest($value['id'], array('oscar.alcantars@gmail.com')));
+				// var_dump($this->mcapi->campaignSendTest($value['id'], array('gamameso@gmail.com')));
 				var_dump($this->mcapi->campaignDelete($value['id']));
 			}
 		}
