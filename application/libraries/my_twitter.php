@@ -85,24 +85,24 @@ class  my_twitter {
     // Si el usuario da permisos a la APP entonces se obtiene un access token legitimo
     if (isset($_GET['oauth_token']) && isset($_GET['oauth_verifier']))
     {
-      $params = array('oauth_nonce'            => time(),
-                      'oauth_signature_method' => 'HMAC-SHA1',
-                      'oauth_timestamp'        => time(),
-                      'oauth_consumer_key'     => $this->key,
-                      'oauth_token'            => $_GET['oauth_token'],
-                      'oauth_version'          => '1.0');
+      // $params = array('oauth_nonce'            => time(),
+      //                 'oauth_signature_method' => 'HMAC-SHA1',
+      //                 'oauth_timestamp'        => time(),
+      //                 'oauth_consumer_key'     => $this->key,
+      //                 'oauth_token'            => $_GET['oauth_token'],
+      //                 'oauth_version'          => '1.0');
 
-      $url = $this->buildUrl($params, FALSE);
-      $post_data = array('oauth_verifier' => $_GET['oauth_verifier']);
-      $result_request_token =  $this->_http($url, $post_data);
+      // $url = $this->buildUrl($params, FALSE);
+      // $post_data = array('oauth_verifier' => $_GET['oauth_verifier']);
+      // $result_request_token =  $this->_http($url, $post_data);
 
-      var_dump($result_request_token);
+      // var_dump($result_request_token);
 
       // var_dump($this->buildUrl($params, FALSE, TRUE));exit;
 
       // return $result_request_token;
 
-      parse_str($result_request_token);
+      // parse_str($result_request_token);
 
       // if ( isset($oauth_token) && isset($user_id) ) {
       //   // Obtiene Informacion extra del usuario
@@ -114,11 +114,11 @@ class  my_twitter {
                       'oauth_signature_method' => 'HMAC-SHA1',
                       'oauth_timestamp'        => time(),
                       'oauth_consumer_key'     => $this->key,
-                      'oauth_token'            => $oauth_token,
+                      'oauth_token'            => $_GET['oauth_token'],
                       'oauth_version'          => '1.0');
 
 
-      var_dump($params);
+      // var_dump($params);
 
       $this->statuses_update('status='.urlencode('Prueba'), $this->buildUrl($params, FALSE, TRUE));
 
