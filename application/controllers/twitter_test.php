@@ -19,19 +19,19 @@ class twitter_test extends MY_Controller {
 	 */
 	public function index()
 	{
-		// echo rawurldecode("status=Maybe%20he%27ll%20finally%20find%20his%20keys.%20%23peterfalk")."<br>";
-		// echo "status=Maybe%20he%27ll%20finally%20find%20his%20keys.%20%23peterfalk"."<br>";
-		// echo "status=".rawurlencode("Maybe he'll finally find his keys. #peterfalk");
-		// exit;
 		$this->load->library('my_twitter');
-		$this->my_twitter->oauth();
+		$res = $this->my_twitter->oauth();
+		var_dump($res);
 	}
 
-	public function signin()
+	public function callback()
 	{
 		$this->load->library('my_twitter');
-		$this->my_twitter->signin();
+		$res = $this->my_twitter->oauth();
+		$result = $this->my_twitter->statuses_update('Este mensaje es de prueba ajuaaa');
+		var_dump($res);
 	}
+
 }
 
 /* End of file welcome.php */

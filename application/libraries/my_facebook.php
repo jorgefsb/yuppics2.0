@@ -13,7 +13,7 @@
  * @category	Facebook API
  * http://developers.facebook.com/docs/reference/api/
  */
-class  my_facebook{
+class  my_facebook {
 
 	private $CI; // Instancia de Codeigniter
 

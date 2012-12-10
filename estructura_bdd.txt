@@ -65,6 +65,25 @@
 	- amount
 	- created
 
+*vouchers
+	- id_voucher
+	- name
+	- code
+	- amount
+	- uses_total
+	- date_start
+	- date_end
+	- created
+	- status
+
+*vouchers_history
+	- id_history
+	- id_voucher
+	- id_customer
+	- id_order
+	- amount
+	- created
+
 *newsletter
 	- id_news
 	- name
@@ -162,10 +181,11 @@
 	- total
 	- created
 	- updated
-	- status
+	- status (p:pendiente, a:autorizado, e:enviado, c:cancelado)
 	- comment
+	- guide_num
 
 *orders_yuppics
 	- id_order
-	- id_yuppics
+	- id_yuppic
 
