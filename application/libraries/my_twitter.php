@@ -8,205 +8,105 @@
  * @filesource
  */
 
+/* Load required lib files. */
+require_once(APPPATH.'libraries/twitteroauth/twitteroauth.php');
+require_once(APPPATH.'libraries/twitteroauth/config.php');
+
+
 // ------------------------------------------------------------------------
 /**
- * @category	Twittter API
+ * @category  Twittter API
  */
 class  my_twitter {
 
-	private $CI; // Instancia de Codeigniter
-  private $status = TRUE;
-  private $http_status = '';
-  private $last_api_call = '';
+  private $CI;
 
-	// Vars
-  private $key = 'MPqCGUskTYllpU4iOM0VQ'; // TWITTER CONSUMER KEY
-	private $secret = '41nH00dTH8KoynjkXbQsR2EaZDpopx4AWNySoZDWpA'; // TWITTER CONSUMER SECRET
- 
-  private $request_token = 'https://api.twitter.com/oauth/request_token';
-  private $access_token = 'https://api.twitter.com/oauth/access_token';
-  
-  private $callback_url = '';	// URL A LA QUE TWITER RE-DIRECCIONARA
+  private $connection;
 
   /**
-   * Constructor
-   */
+  * Constructor
+  */
   public function __construct()
   {
-  	// Obtiene la instancia de condeigniter
+    session_start();
+    
+    // Obtiene la instancia de condeigniter por si se necesita
     $this->CI =& get_instance();
     log_message('debug', "my_twitter Class Initialized");
   }
 
-  /*
-  | Paso 1 Obteniendo el Request Token.
-  | Obtiene los parametros oauth_token. oauth_token_secret, oauth_callback_confirmed.
-  |
-  | Paso 2 Redireccionando al Usuario.
-  | Redirecciona al usuario para que de permisos a la APP.
-  | El usuario sera redireccionado para que de o no permisos a la APP.
-  |
-  | https://dev.twitter.com/docs/auth/implementing-sign-twitter
-  */
   public function oauth()
   {
-    // Parametros necesarios para la Autorizacion de la API
-    $params = array(
-                    // 'oauth_callback'         => urlencode(base_url('twitter_test/signin')),
-                    'oauth_consumer_key'     => $this->key,
-                    'oauth_nonce'            => time(),
-                    'oauth_signature_method' => 'HMAC-SHA1',
-                    'oauth_timestamp'        => time(),
-                    'oauth_version'          => '1.0');
+    // Verifica si existe el parametro GET oauth_verifier.
+    $this->callback();
 
-    $url = $this->buildUrl($params, TRUE);
+    if (empty($_SESSION['access_token']) || empty($_SESSION['access_token']['oauth_token']) || empty($_SESSION['access_token']['oauth_token_secret'])) {
+        $this->clear_sessions();
+    }
     
-    $result_request_token = $this->_http($url);
-    parse_str($result_request_token); //convierte el request token el query string
-    // header('Location:https://api.twitter.com/oauth/authenticate?oauth_token='.$oauth_token);  // Paso 2
-    $oauth = 'https://api.twitter.com/oauth/authenticate?oauth_token='.$oauth_token;
-    echo("<script>window.location.href='".$oauth."'</script>");
+    $access_token = $_SESSION['access_token'];
+    $this->connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
+    return $access_token;
   }
 
-  /*
-  | Paso 3 Convirtiendo el request token en acces token.
-  | Si el usuario acepto o cancelo la autorizacion a la APP es redireccionado a este metodo
-  | Si da permisos llegara los parametros $_GET: oauth_token y oauth_verifier
-  |   entonces se realiza otro POST enviando el oauth_verifier, una respuesta exitosa
-  |   regresara los parametros oauth_token, oauth_token_secret, user_id y screen_name
-  |
-  | Si no da permisos llegara el parametro $_GET: denied
-  |
-  | https://dev.twitter.com/docs/api/1/post/oauth/access_token
-  | https://dev.twitter.com/docs/auth/implementing-sign-twitter
-  */
-  public function signin()
+  private function callback()
   {
-    // Si el usuario da permisos a la APP entonces se obtiene un access token legitimo
-    if (isset($_GET['oauth_token']) && isset($_GET['oauth_verifier']))
+    if (isset($_GET['oauth_verifier'])) 
     {
-      // $params = array('oauth_nonce'            => time(),
-      //                 'oauth_signature_method' => 'HMAC-SHA1',
-      //                 'oauth_timestamp'        => time(),
-      //                 'oauth_consumer_key'     => $this->key,
-      //                 'oauth_token'            => $_GET['oauth_token'],
-      //                 'oauth_version'          => '1.0');
+      $this->connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $_SESSION['oauth_token'], $_SESSION['oauth_token_secret']);
+      $access_token = $this->connection->getAccessToken($_GET['oauth_verifier']);
 
-      // $url = $this->buildUrl($params, FALSE);
-      // $post_data = array('oauth_verifier' => $_GET['oauth_verifier']);
-      // $result_request_token =  $this->_http($url, $post_data);
+      unset($_SESSION['oauth_token']);
+      unset($_SESSION['oauth_token_secret']);
 
-      // var_dump($result_request_token);
-
-      // var_dump($this->buildUrl($params, FALSE, TRUE));exit;
-
-      // return $result_request_token;
-
-      // parse_str($result_request_token);
-
-      // if ( isset($oauth_token) && isset($user_id) ) {
-      //   // Obtiene Informacion extra del usuario
-      //   $extra_info = $this->_http("https://api.twitter.com/1/users/show.json?user_id=$user_id");
-      //   $extra_info = json_decode($extra_info, TRUE);
-      // }
-
-      $params = array('oauth_nonce'            => time(),
-                      'oauth_signature_method' => 'HMAC-SHA1',
-                      'oauth_timestamp'        => time(),
-                      'oauth_consumer_key'     => $this->key,
-                      'oauth_token'            => $_GET['oauth_token'],
-                      'oauth_version'          => '1.0');
-
-
-      // var_dump($params);
-
-      $this->statuses_update('status='.urlencode('Prueba'), $this->buildUrl($params, FALSE, TRUE));
-
-    }
-    elseif (isset($_GET['denied'])) // Si el usuario rechazo o cancelo la autorizacion de la app
-    {
-      header('Location:'.base_url());
+      /* Save the access tokens. Normally these would be saved in a database for future use. */
+      $_SESSION['access_token'] = $access_token;
     }
   }
 
+  private function clear_sessions()
+  {
+    $this->redirect();
+  }
+
+  private function redirect()
+  {
+    /* Build TwitterOAuth object with client credentials. */
+    $this->connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+     
+    /* Get temporary credentials. */
+    $request_token = $this->connection->getRequestToken(OAUTH_CALLBACK);
+
+    /* Save temporary credentials to session. */
+    $_SESSION['oauth_token'] = $token = $request_token['oauth_token'];
+    $_SESSION['oauth_token_secret'] = $request_token['oauth_token_secret'];
+    
+    /* If last connection failed don't display authorization link. */
+    switch ($this->connection->http_code) {
+      case 200:
+        /* Build authorize URL and redirect user to Twitter. */
+        $url = $this->connection->getAuthorizeURL($token);
+        // echo $url;exit;
+        header('Location: ' . $url); 
+        break;
+      default:
+        /* Show notification if something went wrong. */
+        echo 'No se pudo conectar a twitter. Actualiza la pagina o intentalo nuevamente.';
+    }
+  }  
+
+  /******** METODOS PARA INTERACTUAR CON LA API ********/
 
   /**
-   * Actualiza el estado de un usuario, tambien conocido como un twitt.
+   * Actualiza el status del usuario tambien conocido como twitt.
+   * @param  String $status [Mensaje del Twitt]
+   * @return array
    */
-  public function statuses_update($params, $headers)
+  public function statuses_update($status) 
   {
-    $result = $this->_http('https://api.twitter.com/1.1/statuses/update.json', $params, $headers);
-    var_dump($result);exit;
-  }
-
-
-  private function buildUrl($params=array(), $request_token = TRUE, $header_authorization = FALSE)
-  {
-    $keys   = $this->_urlencode_rfc3986(array_keys($params));
-    $values = $this->_urlencode_rfc3986(array_values($params));
-    $params = array_combine($keys, $values);
-    uksort($params, 'strcmp');
-
-    $url_token = ($request_token)?$this->request_token:$this->access_token;
-
-    foreach ($params as $k => $v) {$pairs[] = $this->_urlencode_rfc3986($k).'='.$this->_urlencode_rfc3986($v);}
-    $concatenatedParams = implode('&', $pairs);
-
-    // form base string (first key)
-    $baseString= "GET&".$this->_urlencode_rfc3986($url_token)."&".$this->_urlencode_rfc3986($concatenatedParams);
-    // form secret (second key)
-    $secret = $this->_urlencode_rfc3986($this->secret)."&";
-
-    // Genera el parametro oauth_signature y lo añade al array params
-    $params['oauth_signature'] = $this->_urlencode_rfc3986(base64_encode(hash_hmac('sha1', $baseString, $secret, TRUE)));
-
-    uksort($params, 'strcmp');
-    
-    if ($header_authorization){
-      foreach ($params as $k => $v) {$urlPairs[] = $k.'="'.$v.'"';}
-      return "Authorization: OAuth " . implode(',  ', $urlPairs);
-    }   
-
-    foreach ($params as $k => $v) {$urlPairs[] = $k."=".$v;}
-    $concatenatedUrlParams = implode('&', $urlPairs);
-    // form url
-    return $url_token."?".$concatenatedUrlParams;
-  }
-
-  private function _http($url, $post_data = NULL, $headers = NULL)
-  {
-    $ch = curl_init();
-
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-
-    if(isset($post_data))
-    {
-      // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth oauth_consumer_key="MPqCGUskTYllpU4iOM0VQ", oauth_nonce="f83443c7c726188297cbb20f79b4a908", oauth_signature="vGcgfrX%2BCOaiC1I%2F5eK%2F2u0qpn0%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1354308187", oauth_token="171242286-5vBLYdJBl5Vc5nLQBXXHhXvNlwO8XKHikPv7lErZ", oauth_version="1.0"'));
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array($headers));
-      curl_setopt($ch, CURLOPT_POST, 1);
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-    }
-
-    $response = curl_exec($ch);
-    $this->http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $this->last_api_call = $url;
-    curl_close($ch);
-
-    return $response;
-  }
-
-  private function _urlencode_rfc3986($input)
-  {
-    if (is_array($input)) 
-      return array_map(array('MY_twitter', '_urlencode_rfc3986'), $input);
-    else if (is_scalar($input)) 
-      return str_replace('+',' ',str_replace('%7E', '~', rawurlencode($input)));
-    else
-      return '';
+    $params = array('status'=>$status);
+    $result = $this->connection->post('statuses/update', $params);
+    return $result;
   }
 
 }

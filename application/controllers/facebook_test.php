@@ -31,11 +31,11 @@ class facebook_test extends MY_Controller {
 
 		$this->my_facebook->initialize($config);
 		$access_token = $this->my_facebook->oauth();
-		echo $access_token.'<br>';
+		// echo $access_token.'<br>';
 
 		// $this->get_user_about_me($access_token);
-		$this->get_user_photos($access_token);
-		// $this->get_user_albums($access_token);
+		// $this->get_user_photos($access_token);
+		$this->get_user_albums($access_token);
 
 	}
 
@@ -50,21 +50,32 @@ class facebook_test extends MY_Controller {
 	{
 		$this->load->library('my_facebook');
 		$photos = $this->my_facebook->get_user_photos($access_token);
-		var_dump('<pre>',$photos,'</pre>');
+		// var_dump('<pre>',$photos,'</pre>');
+
+		$params['data_photos'] = $photos->data;
+		$this->load->view('facebook_photos', $params);
 	}
 
 	public function get_user_albums($access_token)
 	{
 		$this->load->library('my_facebook');
 		$albums = $this->my_facebook->get_user_albums($access_token);
-		var_dump('<pre>', $albums, '</pre>');
+		// var_dump('<pre>', $albums, '</pre>');
+
+		$params['access_token'] = $access_token;
+		$params['data_albums'] = $albums->data;
+		$this->load->view('facebook_photos', $params);
 	}
 
 	public function get_user_album_photos()
 	{
 		$this->load->library('my_facebook');
 		$album_photos = $this->my_facebook->get_user_album_photos($_GET['access_token'], $_GET['ida']);
-		var_dump('<pre>', $album_photos, '</pre>');
+		// var_dump('<pre>', $album_photos->data, '</pre>');
+		// $album_photos->data[0]->images[0]->source
+		$params['data_photos'] = $album_photos->data;
+		$this->load->view('facebook_photos', $params);
+
 	}
 
 	public function dialog_request()
