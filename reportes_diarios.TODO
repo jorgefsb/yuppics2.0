@@ -40,3 +40,18 @@
 07-12-2012:
   ☐ Se analizo la libreria de twitter que se escogio para utilizar y se adapto al framework codeigniter.
   ☐ Se iniciaron con los diagramas de clase en la aplicacion creately (online).
+
+10-12-2012:
+  ☐ Continuacion con los diagramas uml funcionamiento de las clases.
+    Crear vista para mostrar visualmente los albums y fotos de la api de facebook.
+11-12-2012:
+  ☐ Revizion y correcion de la base de datos en base a la documentacion existente de yuppics2.0, storyboard, trello, basecamp, etc.
+    Se reanalizaron minuciosamente los documentos antes mencionados para tener ideas mas claras del funcionamiento de la app.
+    Se encontraron detalles en la base de datos y corrigieron.
+12-12-2012
+  ☐ Se inicio con el template base del Login de yuppics2.0 sin diseño ya que no se tiene aun, se utilizo bootstrap como se tenia antes establecido.  Tambien se le adaptop lo de facebook para cuando se requiera loguear o crear la cuenta mediante esa opcion. Solamente parte visual, falta funcionamiento es decir crear la session, guardar en la bdd etc
+
+13-12-2012
+  ☐ Se continuo con el template del registro manual en yuppics2.0, ya que este no se encuentra en el storyboard, se realizo en base a la base de datos solo como "formulario base" si se requiere de cambios se haran eso depende del diseño, se validaron campos.
+    **Sujeta a cambios
+

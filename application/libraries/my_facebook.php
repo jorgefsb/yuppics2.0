@@ -23,6 +23,7 @@ class  my_facebook {
   private $graph_url = 'https://graph.facebook.com/';
   
   private $redirect_uri = '';	// URL A LA QUE FACEBOOK RE-DIRECCIONARA
+  private $cancel_url = '';
   private $scope = '';	// PERMISOS QUE LA APP PEDIRA AL USUARIO. MAS PERMISOS EN http://developers.facebook.com/docs/concepts/login/permissions-login-dialog/
   private $display = '';
 
@@ -60,6 +61,7 @@ class  my_facebook {
    * @return string Access Token
    */
   public function oauth(){
+    $this->validate_error();
     session_start();
   	
     $code = isset($_GET['code'])?$_GET['code']:'';
@@ -69,21 +71,21 @@ class  my_facebook {
   	{
   		$_SESSION['state'] = md5(uniqid(rand(), TRUE)); // PROTECCION CSRF
   		$dialog_url = "https://www.facebook.com/dialog/oauth?client_id=" . $this->APP_ID . 
-  									"&redirect_uri=" . urlencode($this->redirect_uri) . 
+  									"&redirect_uri=" . urlencode($this->redirect_uri.($this->display==='popup'?'?popup=t':'')) . 
   									"&state=" . $_SESSION['state'] . 
   									(empty($this->scope)?'':"&scope=" . $this->scope) .
                     (empty($this->display)?'':"&display=" . $this->display);
 
       // echo $dialog_url;exit;
-      if ($this->display === 'popup') 
-      { 
-        echo("<script>fb=window.open('".$dialog_url."', 'Login con facebook', 'width=50, height=50, left=600, top=150')</script>");
-        exit;
-      }
-      else
-      {
+      // if ($this->display === 'popup') 
+      // { 
+      //   echo("<script>fb=window.open('".$dialog_url."', 'Login con facebook', 'width=50, height=50, left=600, top=150')</script>");
+      //   exit;
+      // }
+      // else
+      // {
         echo("<script>top.location.href='" . $dialog_url . "'</script>");
-      }
+      // }
   	}
 
   	if ($_SESSION['state'] && ($_SESSION['state'] === $state)) 
@@ -106,6 +108,25 @@ class  my_facebook {
   		echo("El parametro state no se encontro. Puedes estar siendo victima de CSRF");
   	}
   	
+  }
+
+  private function validate_error()
+  {
+    if (isset($_GET))
+    {
+      if (isset($_GET['error_reason']) && isset($_GET['error']))
+      {
+        if (isset($_GET['popup'])) 
+          echo("<script>window.close()</script>");
+        else
+          header('Location:' . base_url('login/'));
+      }
+      else
+      {
+        if (isset($_GET['popup'])) 
+          echo("<script>window.close();window.opener.location.href = '".base_url()."'</script>");
+      }
+    }
   }
 
   /**

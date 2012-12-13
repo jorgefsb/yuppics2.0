@@ -24,18 +24,18 @@ class facebook_test extends MY_Controller {
 		$this->load->library('my_facebook');
 
 		$config = array(
-					'redirect_uri' => base_url('facebook_test'),
+					'redirect_uri' => base_url('facebook_test/'),
 					'scope' => 'user_about_me, email, user_photos, friends_photos',
-					'display' => ''
+					'display' => 'popup'
 		);
 
 		$this->my_facebook->initialize($config);
 		$access_token = $this->my_facebook->oauth();
 		// echo $access_token.'<br>';
 
-		// $this->get_user_about_me($access_token);
+		$this->get_user_about_me($access_token);
 		// $this->get_user_photos($access_token);
-		$this->get_user_albums($access_token);
+		// $this->get_user_albums($access_token);
 
 	}
 
