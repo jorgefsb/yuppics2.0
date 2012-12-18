@@ -61,18 +61,21 @@ class  my_facebook {
    * @return string Access Token
    */
   public function oauth(){
+    $this->CI->load->library('session');
     $this->validate_error();
-    session_start();
+    // session_start();
   	
     $code = isset($_GET['code'])?$_GET['code']:'';
     $state = isset($_GET['state'])?$_GET['state']:'';
-
+    $state2 = 'no';
   	if (empty($code)) 
   	{
-  		$_SESSION['state'] = md5(uniqid(rand(), TRUE)); // PROTECCION CSRF
+  		// $_SESSION['state'] = md5(uniqid(rand(), TRUE)); // PROTECCION CSRF
+      $csrf = md5(uniqid(rand(), TRUE)); 
+      $this->CI->session->set_flashdata('state', $csrf);
   		$dialog_url = "https://www.facebook.com/dialog/oauth?client_id=" . $this->APP_ID . 
   									"&redirect_uri=" . urlencode($this->redirect_uri.($this->display==='popup'?'?popup=t':'')) . 
-  									"&state=" . $_SESSION['state'] . 
+  									"&state=" . $csrf . 
   									(empty($this->scope)?'':"&scope=" . $this->scope) .
                     (empty($this->display)?'':"&display=" . $this->display);
 
@@ -86,9 +89,11 @@ class  my_facebook {
       // {
         echo("<script>top.location.href='" . $dialog_url . "'</script>");
       // }
-  	}
+  	}else{
+      $state2 = $this->CI->session->flashdata('state');
+    }
 
-  	if ($_SESSION['state'] && ($_SESSION['state'] === $state)) 
+  	if ($state2 === $state) 
   	{
   		$token_url = $this->graph_url . "oauth/access_token?" . 
   									"client_id=" . $this->APP_ID .
@@ -96,7 +101,15 @@ class  my_facebook {
   									"&client_secret=" . $this->APP_SECRET . 
   									"&code=" . $code;
 
-  		$response = file_get_contents($token_url);
+  		// $response = file_get_contents($token_url);
+      $curl = curl_init($token_url);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+      curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+      curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+      curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+      $response = curl_exec($curl);
+      curl_close($curl); 
   		$params = null;
   		parse_str($response, $params);
 

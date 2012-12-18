@@ -19,6 +19,14 @@ class facebook_test extends MY_Controller {
 	 */
 	public function index()
 	{
+
+// 		$w = stream_get_wrappers();
+// echo 'openssl: ', extension_loaded ('openssl') ? 'yes':'no', "\n";
+// echo 'http wrapper: ', in_array('http', $w) ? 'yes':'no', "\n";
+// echo 'https wrapper: ', in_array('https', $w) ? 'yes':'no', "\n";
+// echo 'wrappers: ', var_dump($w);
+
+// exit;
 		// echo 'Pruebillas con la api de facebook.';
 
 		$this->load->library('my_facebook');
