@@ -51,7 +51,7 @@ $route['(:any)/(:any)']        = "$1/$2";
 |
 */
 
-$route['default_controller'] = "welcome";
+$route['default_controller'] = "customer";
 $route['404_override'] = '';
 
 
