@@ -55,3 +55,6 @@
   ☐ Se continuo con el template del registro manual en yuppics2.0, ya que este no se encuentra en el storyboard, se realizo en base a la base de datos solo como "formulario base" si se requiere de cambios se haran eso depende del diseño, se validaron campos.
     **Sujeta a cambios
 
+14-12-2012
+  ☐ Parte backend del login y registro, limpiar parametros, validaciones, operaciones con la base de datos.
+

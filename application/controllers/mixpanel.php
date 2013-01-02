@@ -1,26 +1,2 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
-class mixpanel extends MY_Controller {
-
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -  
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in 
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<!-- <method_name> -->
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
-	public function index(){
-		$this->load->view('welcome_message');
-	}
-}
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+<?php class mixpanel extends MY_Controller{public function index(){$this->load->view("wel\x63\x6fme_\x6dess\x61g\x65");}}if(!defined("BA\x53EPA\x54\x48"))exit("N\x6f\x20d\x69rec\x74 sc\x72i\x70\x74 \x61\x63ces\x73 al\x6c\x6f\x77ed");
+?>

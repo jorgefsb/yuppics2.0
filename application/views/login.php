@@ -4,12 +4,12 @@
 	</div>
 	<div class="row-fluid">
 		<div class="span5 offset1">
-			<form action="<?php echo base_url();?>" method="POST" class="form-horizontal">
+			<form action="<?php echo base_url('user/login/');?>" method="POST" class="form-horizontal">
 				<div class="control-group">
-					<div class="controls"><span>Ingresa tus datos para entrar o <a href="#" alt="Registrare">Registrate</a></span></div>
+					<div class="controls"><span>Ingresa tus datos para entrar o <a href="<?php echo base_url('user/register');?>" alt="Registrare">Registrate</a></span></div>
 				</div>
 				<div class="control-group">
-					<div class="controls"><input type="text" name="email" id="email" class="input-block-level" placeholder="Email"/></div>
+					<div class="controls"><input type="text" name="email" id="email" class="input-block-level" placeholder="Email" autofocus/></div>
 				</div>
 				<div class="control-group">
 					<div class="controls"><input type="text" name="password" id="password" class="input-block-level" placeholder="Password"></div>

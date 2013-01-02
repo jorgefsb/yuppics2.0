@@ -36,20 +36,24 @@
 						<?php echo form_error('usernama');?>
 					</div>
 				</div>
-				<div class="control-group">
-					<label for="password" class="control-label">Password</label>
-					<div class="controls">
-						<input type="password" name="password" value="" class="" id="password" placeholder="Password" required maxlength="15">
-						<?php echo form_error('password');?>
-						<span class="help-block">8 caracteres mínimo</span>
+				<div class="password-container"> 
+					<div class="control-group">
+						<label for="password" class="control-label">Password</label>
+						<div class="controls">
+							<input type="password" name="password" value="" class="strong-password" id="password" placeholder="Password" required maxlength="15">
+							
+							<div class="help-inline"><div class="strength-indicator"><div class="meter"></div></div></div>
+							<?php echo form_error('password');?>
+							<span class="help-block">8 caracteres mínimo</span>
+						</div>
 					</div>
-				</div>
-				<div class="control-group">
-					<label for="repassword" class="control-label">Repetir password</label>
-					<div class="controls">
-						<input type="password" name="repassword" value="" class="" id="repassword" placeholder="Re-password" required maxlength="15">
-						<?php echo form_error('repassword');?>
-						<span class="help-block">8 caracteres mínimo</span>
+					<div class="control-group">
+						<label for="repassword" class="control-label">Repetir password</label>
+						<div class="controls">
+							<input type="password" name="repassword" value="" class="strong-password" id="repassword" placeholder="Re-password" required maxlength="15">
+							<?php echo form_error('repassword');?>
+							<span class="help-block">8 caracteres mínimo</span>
+						</div>
 					</div>
 				</div>
 				<div class="form-actions" style="background-color:white;border-top:white;">
